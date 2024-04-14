@@ -1,0 +1,99 @@
+{% extends "base.html" %}
+
+{% block title %}Home{% endblock %}
+
+{% block content %}
+    <div class="container">
+        {% if current_user.is_authenticated %}
+            {% if current_user.__class__.__name__ == 'Doctor' %}
+                <div class="row">
+                    <div class="col-md-6">
+                        <h1>Welcome, Dr. {{ current_user.first_name }}</h1>
+                        <h3>Your Details:</h3>
+                        <ul class="list-group">
+                            <li class="list-group-item"><strong>ID:</strong> {{ current_user.id }}</li>
+                            <li class="list-group-item"><strong>Age:</strong> {{ current_user.age }}</li>
+                            <li class="list-group-item"><strong>Gender:</strong> {{ current_user.gender }}</li>
+                            <li class="list-group-item"><strong>Specialization:</strong> {{ current_user.specialization }}</li>
+                        </ul>
+                    </div>
+                    <div class="col-md-6">
+                        <h2>Input Diagnosis Data</h2>
+                        <form method="POST">
+                            <div class="form-group">
+                                <label for="patientId">Patient ID</label>
+                                <input type="text" class="form-control" id="patientId" name="patientId" placeholder="Enter patient ID">
+                            </div>
+                            <div class="form-group">
+                                <label for="diagnosis">Diagnosis</label>
+                                <input type="text" class="form-control" id="diagnosis" name="diagnosis" placeholder="Enter diagnosis">
+                            </div>
+                            <div class="form-group">
+                                <label for="details">Details</label>
+                                <textarea class="form-control" id="details" name="details" rows="3" placeholder="Enter additional details"></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label for="medicine">Medicine Prescribed</label>
+                                <input type="text" class="form-control" id="medicine" name="medicine" placeholder="Enter prescribed medicine">
+                            </div>
+                            <button type="submit" class="btn btn-primary">Submit Diagnosis</button>
+                        </form>
+                    </div>
+                </div>
+                <div class="row mt-5">
+                    <div class="col-md-12">
+                        <h2>Existing Diagnoses</h2>
+                        <ul class="list-group">
+                            {% for diagnosis in diagnoses %}
+                                <li class="list-group-item">
+                                    <strong>Diagnosis ID:</strong> {{ diagnosis.id }}<br>
+                                    <strong>Date of Diagnosis:</strong> {{ diagnosis.date }}<br>
+                                    <strong>Patient Name:</strong>{{ diagnosis.patient.first_name }} {{ diagnosis.patient.last_name }}<br>
+                                    <strong>Diagnosis:</strong> {{ diagnosis.diagnosis }}<br>
+                                    <strong>Details:</strong> {{ diagnosis.details }}<br>
+                                    <strong>Medicine Prescribed:</strong> {{ diagnosis.medicine_prescribed }}
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+            {% elif current_user.__class__.__name__ == 'Patient' %}
+                <h1>Welcome, {{ current_user.first_name }}</h1>
+                <h3>Your Details:</h3>
+                <ul class="list-group">
+                    <li class="list-group-item"><strong>ID:</strong> {{ current_user.id }}</li>
+                    <li class="list-group-item"><strong>Age:</strong> {{ current_user.age }}</li>
+                    <li class="list-group-item"><strong>Gender:</strong> {{ current_user.gender }}</li>
+                    <li class="list-group-item"><strong>Blood Type:</strong> {{ current_user.blood_type }}</li>
+                </ul>
+                <h2>Your Diagnoses</h2>
+                <ul>
+                    {% for diagnosis in diagnoses %}
+                        <li class="list-group-item">
+                            <strong>Diagnosis ID:</strong> {{ diagnosis.id }}<br>
+                            <strong>Date of Diagnosis:</strong> {{ diagnosis.date }}<br>
+                            <strong>Diagnosis:</strong> {{ diagnosis.diagnosis }}<br>
+                            <strong>Details:</strong> {{ diagnosis.details }}<br>
+                            <strong>Medicine Prescribed:</strong> {{ diagnosis.medicine_prescribed }}
+                        </li>
+                    {% endfor %}
+                </ul>
+                <h2>Your Bills</h2>
+                <ul>
+                    {% for bill in bills %}
+                        <li class="list-group-item">
+                            <strong>Bill ID:</strong> {{ bill.id }}<br>
+                            <strong>Date of Billing:</strong> {{ bill.date }}<br>
+                            <strong>Amount to Pay:</strong> {{ bill.amount }}<br>
+                            <strong>Due Date:</strong> {{ bill.due_date }}<br>
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+        {% else %}
+            <p>Please login to view content.</p>
+        {% endif %}
+    </div>
+{% endblock %}
+
+
